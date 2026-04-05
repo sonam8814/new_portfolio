@@ -146,6 +146,167 @@
   pointer-events: none;
   z-index: 2;
 }
+
+/* Female Avatar Styles */
+.female-avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.avatar-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: fadeInAvatar 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInAvatar {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.silhouette {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.02);
+  }
+}
+
+.hair {
+  animation: hairFlow 3s ease-in-out infinite;
+}
+
+@keyframes hairFlow {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+.hair-strand {
+  animation: strandFlow 2.5s ease-in-out infinite;
+}
+
+.hair-strand:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+@keyframes strandFlow {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(3px) rotate(1deg);
+  }
+}
+
+.body {
+  animation: bodyFloat 4s ease-in-out infinite;
+}
+
+@keyframes bodyFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.dress {
+  transform-origin: top center;
+  animation: dressSway 5s ease-in-out infinite;
+}
+
+@keyframes dressSway {
+  0%, 100% {
+    transform: skewX(0deg);
+  }
+  30% {
+    transform: skewX(0.5deg);
+  }
+  70% {
+    transform: skewX(-0.5deg);
+  }
+}
+
+.arm {
+  transform-origin: top center;
+}
+
+.left-arm {
+  animation: armSwayLeft 4s ease-in-out infinite;
+}
+
+.right-arm {
+  animation: armSwayRight 4s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes armSwayLeft {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes armSwayRight {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.avatar-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(107, 158, 122, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+}
 .character-hover {
   position: absolute;
   width: 280px;

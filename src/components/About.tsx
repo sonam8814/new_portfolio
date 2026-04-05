@@ -6,9 +6,15 @@ const About = () => {
       <div className="about-me">
         <h3 className="title">About Me</h3>
         <p className="para">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic quis
-          dolores numquam iusto Ratione earum ducimus autem id iure pariatur
-          dolorum quae maiores.
+          I am a Computer Science graduate passionate about full-stack development
+          and AI, with a focus on building practical, user-centric applications. I
+          enjoy turning ideas into functional products and have experience working
+          with technologies like JavaScript, Node.js, MongoDB, and modern frontend
+          frameworks. I am currently enhancing my skills in backend development,
+          system design, and machine learning while actively building projects that
+          solve real-world problems. I am seeking an opportunity to start my career
+          in a growth-oriented tech environment where I can contribute meaningfully
+          and continue learning.
         </p>
       </div>
     </div>

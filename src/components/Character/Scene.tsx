@@ -1,156 +1,103 @@
-import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import setCharacter from "./utils/character";
-import setLighting from "./utils/lighting";
+import { useEffect, useRef } from "react";
 import { useLoading } from "../../context/LoadingProvider";
-import handleResize from "./utils/resizeUtils";
-import {
-  handleMouseMove,
-  handleTouchEnd,
-  handleHeadRotation,
-  handleTouchMove,
-} from "./utils/mouseUtils";
-import setAnimations from "./utils/animationUtils";
 import { setProgress } from "../Loading";
 
 const Scene = () => {
-  const canvasDiv = useRef<HTMLDivElement | null>(null);
-  const hoverDivRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef(new THREE.Scene());
+  const containerRef = useRef<HTMLDivElement>(null);
   const { setLoading } = useLoading();
 
-  const [character, setChar] = useState<THREE.Object3D | null>(null);
   useEffect(() => {
-    if (canvasDiv.current) {
-      let rect = canvasDiv.current.getBoundingClientRect();
-      let container = { width: rect.width, height: rect.height };
-      const aspect = container.width / container.height;
-      const scene = sceneRef.current;
+    const progress = setProgress((value) => setLoading(value));
+    progress.loaded();
 
-      const renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: true,
-      });
-      renderer.setSize(container.width, container.height);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1;
-      canvasDiv.current.appendChild(renderer.domElement);
-
-      const camera = new THREE.PerspectiveCamera(14.5, aspect, 0.1, 1000);
-      camera.position.z = 10;
-      camera.position.set(0, 13.1, 24.7);
-      camera.zoom = 1.1;
-      camera.updateProjectionMatrix();
-
-      let headBone: THREE.Object3D | null = null;
-      let screenLight: any | null = null;
-      let mixer: THREE.AnimationMixer;
-
-      const clock = new THREE.Clock();
-
-      const light = setLighting(scene);
-      let progress = setProgress((value) => setLoading(value));
-      const { loadCharacter } = setCharacter(renderer, scene, camera);
-
-      loadCharacter().then((gltf) => {
-        if (gltf) {
-          const animations = setAnimations(gltf);
-          hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
-          mixer = animations.mixer;
-          let character = gltf.scene;
-          setChar(character);
-          scene.add(character);
-          headBone = character.getObjectByName("spine006") || null;
-          screenLight = character.getObjectByName("screenlight") || null;
-          progress.loaded().then(() => {
-            setTimeout(() => {
-              light.turnOnLights();
-              animations.startIntro();
-            }, 2500);
-          });
-          window.addEventListener("resize", () =>
-            handleResize(renderer, camera, canvasDiv, character)
-          );
-        }
-      });
-
-      let mouse = { x: 0, y: 0 },
-        interpolation = { x: 0.1, y: 0.2 };
-
-      const onMouseMove = (event: MouseEvent) => {
-        handleMouseMove(event, (x, y) => (mouse = { x, y }));
-      };
-      let debounce: number | undefined;
-      const onTouchStart = (event: TouchEvent) => {
-        const element = event.target as HTMLElement;
-        debounce = setTimeout(() => {
-          element?.addEventListener("touchmove", (e: TouchEvent) =>
-            handleTouchMove(e, (x, y) => (mouse = { x, y }))
-          );
-        }, 200);
-      };
-
-      const onTouchEnd = () => {
-        handleTouchEnd((x, y, interpolationX, interpolationY) => {
-          mouse = { x, y };
-          interpolation = { x: interpolationX, y: interpolationY };
-        });
-      };
-
-      document.addEventListener("mousemove", (event) => {
-        onMouseMove(event);
-      });
-      const landingDiv = document.getElementById("landingDiv");
-      if (landingDiv) {
-        landingDiv.addEventListener("touchstart", onTouchStart);
-        landingDiv.addEventListener("touchend", onTouchEnd);
+    // Add class to show the character after loading
+    const timer = setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.classList.add("character-loaded");
       }
-      const animate = () => {
-        requestAnimationFrame(animate);
-        if (headBone) {
-          handleHeadRotation(
-            headBone,
-            mouse.x,
-            mouse.y,
-            interpolation.x,
-            interpolation.y,
-            THREE.MathUtils.lerp
-          );
-          light.setPointLight(screenLight);
-        }
-        const delta = clock.getDelta();
-        if (mixer) {
-          mixer.update(delta);
-        }
-        renderer.render(scene, camera);
-      };
-      animate();
-      return () => {
-        clearTimeout(debounce);
-        scene.clear();
-        renderer.dispose();
-        window.removeEventListener("resize", () =>
-          handleResize(renderer, camera, canvasDiv, character!)
-        );
-        if (canvasDiv.current) {
-          canvasDiv.current.removeChild(renderer.domElement);
-        }
-        if (landingDiv) {
-          document.removeEventListener("mousemove", onMouseMove);
-          landingDiv.removeEventListener("touchstart", onTouchStart);
-          landingDiv.removeEventListener("touchend", onTouchEnd);
-        }
-      };
-    }
-  }, []);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [setLoading]);
 
   return (
     <>
       <div className="character-container">
-        <div className="character-model" ref={canvasDiv}>
+        <div className="character-model" ref={containerRef}>
           <div className="character-rim"></div>
-          <div className="character-hover" ref={hoverDivRef}></div>
+          <div className="female-avatar">
+            <svg viewBox="0 0 200 400" className="avatar-svg">
+              <defs>
+                <linearGradient id="avatarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#6b9e7a" />
+                  <stop offset="50%" stopColor="#4a7c59" />
+                  <stop offset="100%" stopColor="#2d5a3d" />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Female silhouette */}
+              <g className="silhouette" filter="url(#glow)">
+                {/* Head */}
+                <ellipse cx="100" cy="45" rx="30" ry="35" fill="url(#avatarGradient)" />
+                {/* Hair */}
+                <path
+                  d="M70 45 Q65 20 80 15 Q100 5 120 15 Q135 20 130 45 Q135 30 125 25 Q100 10 75 25 Q65 30 70 45"
+                  fill="url(#avatarGradient)"
+                  className="hair"
+                />
+                <path
+                  d="M65 50 Q55 80 60 120"
+                  stroke="url(#avatarGradient)"
+                  strokeWidth="15"
+                  fill="none"
+                  className="hair-strand"
+                />
+                <path
+                  d="M135 50 Q145 80 140 120"
+                  stroke="url(#avatarGradient)"
+                  strokeWidth="15"
+                  fill="none"
+                  className="hair-strand"
+                />
+                {/* Neck */}
+                <rect x="90" y="75" width="20" height="25" fill="url(#avatarGradient)" />
+                {/* Shoulders and upper body */}
+                <path
+                  d="M50 100 Q70 95 100 100 Q130 95 150 100 Q160 110 155 140 L155 200 L45 200 L45 140 Q40 110 50 100"
+                  fill="url(#avatarGradient)"
+                  className="body"
+                />
+                {/* Arms */}
+                <path
+                  d="M50 105 Q35 120 30 180 Q28 200 35 210"
+                  stroke="url(#avatarGradient)"
+                  strokeWidth="15"
+                  fill="none"
+                  className="arm left-arm"
+                />
+                <path
+                  d="M150 105 Q165 120 170 180 Q172 200 165 210"
+                  stroke="url(#avatarGradient)"
+                  strokeWidth="15"
+                  fill="none"
+                  className="arm right-arm"
+                />
+                {/* Lower body - dress/skirt */}
+                <path
+                  d="M55 200 Q50 250 45 320 Q40 360 100 370 Q160 360 155 320 Q150 250 145 200"
+                  fill="url(#avatarGradient)"
+                  className="dress"
+                />
+              </g>
+            </svg>
+          </div>
+          <div className="avatar-glow"></div>
         </div>
       </div>
     </>
