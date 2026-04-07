@@ -28,7 +28,7 @@ const Work = () => {
     scrollTrigger: {
       trigger: ".work-section",
       start: "top top",
-      end: `+=${translateX}`, // Use actual scroll width
+      end: `+=${translateX}`,
       scrub: true,
       pin: true,
       id: "work",
@@ -40,7 +40,12 @@ const Work = () => {
     ease: "none",
   });
 
-  // Clean up (optional, good practice)
+  // Refresh ScrollTrigger after a short delay to ensure proper layout
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 100);
+
+  // Clean up
   return () => {
     timeline.kill();
     ScrollTrigger.getById("work")?.kill();

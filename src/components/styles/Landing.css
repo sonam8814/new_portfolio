@@ -97,192 +97,6 @@
   transform: translate(-50%, 100%) scale(1.4);
   opacity: 0;
 }
-.character-model {
-  height: 80%;
-  height: 80vh;
-  position: absolute;
-  max-width: 1920px;
-  max-height: 1080px;
-  transform: translateX(-50%);
-  width: 100%;
-  left: 50%;
-  z-index: 0;
-  bottom: 50px;
-  pointer-events: inherit;
-}
-.character-model::after {
-  content: "";
-  width: 100vw;
-  height: 250px;
-  background-image: linear-gradient(
-    to bottom,
-    transparent,
-    var(--backgroundColor) 70%
-  );
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9;
-  position: absolute;
-}
-.character-model::before {
-  content: "";
-  width: 100vw;
-  height: 700px;
-  background-color: var(--backgroundColor);
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9;
-  position: absolute;
-}
-.character-loaded .character-rim {
-  animation: backlight 3s forwards;
-  animation-delay: 0.3s;
-  opacity: 0;
-}
-.character-model canvas {
-  position: relative;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Female Avatar Styles */
-.female-avatar {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 350px;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-}
-
-.avatar-svg {
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  animation: fadeInAvatar 1s ease forwards;
-  animation-delay: 0.5s;
-}
-
-@keyframes fadeInAvatar {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.silhouette {
-  animation: breathe 4s ease-in-out infinite;
-}
-
-@keyframes breathe {
-  0%, 100% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(1.02);
-  }
-}
-
-.hair {
-  animation: hairFlow 3s ease-in-out infinite;
-}
-
-@keyframes hairFlow {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(2px);
-  }
-}
-
-.hair-strand {
-  animation: strandFlow 2.5s ease-in-out infinite;
-}
-
-.hair-strand:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-@keyframes strandFlow {
-  0%, 100% {
-    transform: translateX(0) rotate(0deg);
-  }
-  50% {
-    transform: translateX(3px) rotate(1deg);
-  }
-}
-
-.body {
-  animation: bodyFloat 4s ease-in-out infinite;
-}
-
-@keyframes bodyFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.dress {
-  transform-origin: top center;
-  animation: dressSway 5s ease-in-out infinite;
-}
-
-@keyframes dressSway {
-  0%, 100% {
-    transform: skewX(0deg);
-  }
-  30% {
-    transform: skewX(0.5deg);
-  }
-  70% {
-    transform: skewX(-0.5deg);
-  }
-}
-
-.arm {
-  transform-origin: top center;
-}
-
-.left-arm {
-  animation: armSwayLeft 4s ease-in-out infinite;
-}
-
-.right-arm {
-  animation: armSwayRight 4s ease-in-out infinite;
-  animation-delay: 0.5s;
-}
-
-@keyframes armSwayLeft {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-3px);
-  }
-}
-
-@keyframes armSwayRight {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(3px);
-  }
-}
 
 .avatar-glow {
   position: absolute;
@@ -305,6 +119,172 @@
   50% {
     transform: translate(-50%, -50%) scale(1.2);
     opacity: 0.8;
+  }
+}
+
+/* Animated Blobs Styles */
+.animated-blobs-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.blobs-loaded {
+  opacity: 1;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.6;
+  will-change: transform;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(107, 158, 122, 0.8) 0%, rgba(61, 122, 79, 0.4) 50%, transparent 70%);
+  top: -10%;
+  right: -5%;
+  animation: float1 20s ease-in-out infinite;
+}
+
+.blob-2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(74, 124, 89, 0.7) 0%, rgba(45, 90, 61, 0.3) 50%, transparent 70%);
+  bottom: 10%;
+  left: -5%;
+  animation: float2 25s ease-in-out infinite;
+}
+
+.blob-3 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(129, 178, 144, 0.6) 0%, rgba(107, 158, 122, 0.3) 50%, transparent 70%);
+  top: 40%;
+  left: 30%;
+  animation: float3 18s ease-in-out infinite;
+}
+
+.blob-4 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(45, 90, 61, 0.5) 0%, transparent 70%);
+  top: 60%;
+  right: 20%;
+  animation: float4 22s ease-in-out infinite;
+}
+
+.blob-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(107, 158, 122, 0.15) 0%, transparent 60%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: glowPulseBlob 8s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-30px, 40px) scale(1.05);
+  }
+  50% {
+    transform: translate(20px, 30px) scale(0.95);
+  }
+  75% {
+    transform: translate(-20px, -20px) scale(1.02);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(40px, -30px) scale(1.08);
+  }
+  66% {
+    transform: translate(-30px, 20px) scale(0.92);
+  }
+}
+
+@keyframes float3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(50px, 30px) rotate(5deg);
+  }
+  50% {
+    transform: translate(20px, -20px) rotate(-3deg);
+  }
+  75% {
+    transform: translate(-30px, 10px) rotate(2deg);
+  }
+}
+
+@keyframes float4 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-40px, -30px);
+  }
+}
+
+@keyframes glowPulseBlob {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.5;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .animated-blobs-container {
+    position: absolute;
+    height: 100%;
+  }
+
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .blob-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .blob-3 {
+    width: 180px;
+    height: 180px;
+  }
+
+  .blob-4 {
+    width: 150px;
+    height: 150px;
+  }
+
+  .blob-glow {
+    width: 350px;
+    height: 350px;
   }
 }
 .character-hover {
