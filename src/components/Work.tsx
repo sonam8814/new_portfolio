@@ -3,54 +3,70 @@ import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
 const Work = () => {
+  const workRef = useRef<HTMLDivElement>(null);
+
   useGSAP(() => {
-  let translateX: number = 0;
+    let translateX: number = 0;
 
-  function setTranslateX() {
-    const box = document.getElementsByClassName("work-box");
-    const rectLeft = document
-      .querySelector(".work-container")!
-      .getBoundingClientRect().left;
-    const rect = box[0].getBoundingClientRect();
-    const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-    let padding: number =
-      parseInt(window.getComputedStyle(box[0]).padding) / 2;
-    translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
-  }
+    function setTranslateX() {
+      const box = document.getElementsByClassName("work-box");
+      const container = document.querySelector(".work-container");
+      if (!container || box.length === 0) return;
 
-  setTranslateX();
+      const rectLeft = container.getBoundingClientRect().left;
+      const rect = box[0].getBoundingClientRect();
+      const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
+      const padding = parseInt(window.getComputedStyle(box[0]).padding) / 2;
+      translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
+    }
 
-  let timeline = gsap.timeline({
-    scrollTrigger: {
-      trigger: ".work-section",
-      start: "top top",
-      end: `+=${translateX}`,
-      scrub: true,
-      pin: true,
-      id: "work",
-    },
-  });
+    setTranslateX();
 
-  timeline.to(".work-flex", {
-    x: -translateX,
-    ease: "none",
-  });
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".work-section",
+        start: "top top",
+        end: `+=${translateX + 200}`,
+        scrub: true,
+        pin: true,
+        id: "work",
+        pinSpacing: true,
+      },
+    });
 
-  // Refresh ScrollTrigger after a short delay to ensure proper layout
-  setTimeout(() => {
-    ScrollTrigger.refresh();
-  }, 100);
+    timeline.to(".work-flex", {
+      x: -translateX,
+      ease: "none",
+    });
 
-  // Clean up
-  return () => {
-    timeline.kill();
-    ScrollTrigger.getById("work")?.kill();
-  };
-}, []);
+    // Refresh ScrollTrigger after a short delay to ensure proper layout
+    const refreshTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+
+    // Clean up
+    return () => {
+      clearTimeout(refreshTimeout);
+      timeline.kill();
+      ScrollTrigger.getById("work")?.kill();
+    };
+  }, []);
+
+  // Add spacer after work section to prevent overlap
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
 const projects = [
   { name: "E-Commerce Platform", category: "Full Stack Web App", tools: "React, Node.js, MongoDB, Stripe" },
