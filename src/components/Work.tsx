@@ -3,13 +3,12 @@ import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(ScrollTrigger);
 
 const Work = () => {
-  const workRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     let translateX: number = 0;
